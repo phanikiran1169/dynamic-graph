@@ -27,7 +27,7 @@ template <class Time>
 class SignalBase : public boost::noncopyable {
  public:
   explicit SignalBase(std::string name = "")
-      : name(name), signalTime(0), ready(false) {}
+      : name(name), signalTime(0), ready(false), recomputeFromPy(false) {}
 
   virtual ~SignalBase() {}
 
@@ -195,11 +195,15 @@ class SignalBase : public boost::noncopyable {
                              this->getName().c_str());
   }
   /// \}
+  
+  virtual void recomputeFromPy(const Time &) {}
+  virtual void setRecomputeFromPy(bool) {}
 
  protected:
   std::string name;
   Time signalTime;
   bool ready;
+  bool recomputeFromPy;
 };
 
 /// Forward to a virtual fonction.
