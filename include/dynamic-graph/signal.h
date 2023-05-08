@@ -87,6 +87,9 @@ class Signal : public SignalBase<Time> {
   virtual void setReferenceNonConstant(T *t, Mutex *mutexref = NULL);
   virtual void setFunction(boost::function2<T &, T &, Time> t,
                            Mutex *mutexref = NULL);
+  virtual void setRecomputeFromPy(bool recomputeFromPy) {
+    this->recomputeFromPy = recomputeFromPy;
+  }                           
 
   inline bool getKeepReference() { return keepReference; }
   inline void setKeepReference(const bool &b) { keepReference = b; }
@@ -94,6 +97,14 @@ class Signal : public SignalBase<Time> {
   /* --- Signal computation --- */
   virtual const T &access(const Time &t);
   virtual inline void recompute(const Time &t) { access(t); }
+  virtual void recomputeFromPy(const Time &t) {
+    if(this->recomputeFromPy) {
+      this->recompute(t);
+    }
+    else {
+      throw;
+    }
+  }  
   virtual const T &accessCopy() const;
 
   virtual std::ostream &display(std::ostream &os) const;
